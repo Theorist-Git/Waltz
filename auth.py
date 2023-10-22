@@ -145,14 +145,14 @@ def otp():
                 sender_password=password,
                 recipients=[session['EMAIL']],
                 message=f"""\
-                Theorist-Dev Email Verification Code:
-                OTP: {COMP_OTP} (Valid for 5 minutes)
+            Waltz Email Verification Code:
+            OTP: {COMP_OTP} (Valid for 5 minutes)
 
-                If you didn't attempt this registration, you can safely ignore this email, someone might have typed\ 
-                it in by mistake.
+            If you didn't attempt this registration, you can safely ignore this email, someone might have typed 
+            it in by mistake.
                 """,
                 msg_type="plain",
-                subject="Theorist-Dev Email Verification"
+                subject="Waltz Email Verification"
             )
 
             courier.send_courier()
@@ -274,14 +274,14 @@ def mfa_login():
                     sender_password=password,
                     recipients=[session['EMAIL']],
                     message=f"""\
-                    Theorist-Dev Email Two Factor Authentication:
+                    Waltz Email Two Factor Authentication:
                     OTP: {COMP_OTP} (Valid for 5 minutes)
 
                     If you didn't attempt this login, someone has your account details, change them immediately:
                     example.com
                     """,
                     msg_type="plain",
-                    subject="Theorist-Dev Email Two Factor Authentication"
+                    subject="Waltz Email Two Factor Authentication"
                 )
 
                 courier.send_courier()
@@ -394,7 +394,7 @@ def two_fa():
     :return: renders template 'two-FA.html'
     """
     if request.method == 'GET':
-        secret = two_factor_obj.totp(name=current_user.email, issuer_name="theorist-dev.com")
+        secret = two_factor_obj.totp(name=current_user.email, issuer_name="Waltz.com")
     if request.method == 'POST':
         token = request.form['SECRET']
         USER_OTP = request.form['OTP']
@@ -480,14 +480,14 @@ def otp_check():
                 sender_password=password,
                 recipients=[session['EMAIL']],
                 message=f"""\
-                Theorist-Dev Password Reset
+                Waltz Password Reset
                 OTP: {COMP_OTP} (Valid for 5 minutes)
 
                 If you didn't attempt this password-reset, you can safely ignore this email, someone might have typed\ 
                 it in by mistake
                 """,
                 msg_type="plain",
-                subject="Theorist-Dev Password Reset"
+                subject="Waltz Password Reset"
             )
             courier.send_courier()
 
