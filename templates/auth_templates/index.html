@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- banner -->
+<section class="banner_main">
+    <div class="container py-4">
+        <header class="pb-3 mb-4 border-bottom">
+            <a href="/static" class="d-flex align-items-center text-dark text-decoration-none">
+                <a href="https://github.com/Theorist-Git" target="_blank" rel="noopener noreferrer"><img src="/static/svg/github.svg" width="40px" alt="github" /></a>
+                <a href="mailto:someone@example.com"><img class="mx-3" src="/static/svg/mailto.svg" width="40px" alt="email" /></a>
+            </a>
+        </header>
+
+        <div class="p-5 mb-4 bg-light rounded-3" style="position: relative;">
+            <h1 class="display-5 fw-bold">
+                Waltz: An open source, cloud-based password manager.
+            </h1>
+            <p class="fs-4">
+                Built as a hobby project, you're better off using <a href="https://bitwarden.com/">Bitwarden</a>, <a href="https://keepassxc.org/">KeepassXC</a> etc.
+            </p>
+        </div>
+
+        <div class="row align-items-md-stretch">
+            <div class="col-md-6">
+                <div class="h-100 p-5 text-white bg-dark rounded-3">
+                    <h2>Change the background</h2>
+                    <p>
+                        Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.
+                    </p>
+                    <button class="btn btn-outline-light" type="button">
+                        Example button
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="h-100 p-5 bg-light border rounded-3">
+                    <h2>Add borders</h2>
+                    <p>
+                        Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's
+                        content for equal-height.
+                    </p>
+                    <button class="btn btn-outline-secondary" type="button">
+                        Example button
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .moveimage {
+        position: relative;
+        bottom: 320px;
+        left: 780px;
+        max-width: 100%;
+        height: auto;
+        margin-bottom: -20px;
+        margin-top: -20px;
+    }
+</style>
+
+{% endblock content %}
