@@ -35,6 +35,7 @@ vault = Blueprint("vault", __name__, template_folder="templates/vault_templates/
 
 
 @vault.route('/vault', methods=["GET", "POST"])
+@login_required
 def vault_display():
     Password_blob = Passwords.query.filter_by(user_id=current_user.id).all()
     if request.method == "POST":
