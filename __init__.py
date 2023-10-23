@@ -74,9 +74,11 @@ def create_app():
 
     # importing view blueprints from their respective files, to be registered with the flask app.
     from auth import auth
+    from vault import vault
 
     # To be fixed after views are fixed!!!
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(vault, url_prefix='/')
 
     # 'app.errorhandler' decorator overrides default error pages and replaces them with custom ones
     # 404(page_not_found), 403(forbidden), 500(internal server error) are set explicitly

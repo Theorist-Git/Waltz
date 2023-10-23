@@ -166,7 +166,7 @@ def otp():
                 del session['referred_from_create']
 
                 new_user = User(name=session['NAME'],
-                                password=PASSWORD,
+                                master_password=PASSWORD,
                                 email=session['EMAIL'],
                                 active=True,
                                 last_confirmed_at=datetime.now())
@@ -292,7 +292,7 @@ def mfa_login():
                 PASSWORD = request.form['PASSWORD']
                 USER_OTP = request.form['OTP-EMAIL']
                 if otp_police.check_password_hash(session['COMP_OTP'], USER_OTP) and \
-                        password_police.check_password_hash(user.password, PASSWORD):
+                        password_police.check_password_hash(user.master_password, PASSWORD):
                     del session['COMP_OTP']
                     del session['2FA_STATUS']
                     login_user(user, remember=False)
@@ -309,7 +309,7 @@ def mfa_login():
                 try:
                     token = two_factor_obj.decrypt(PASSWORD.encode('utf-8'), user.two_FA_key)
                     if two_factor_obj.verify(str(token), USER_OTP) and \
-                            password_police.check_password_hash(user.password, PASSWORD):
+                            password_police.check_password_hash(user.master_password, PASSWORD):
 
                         del session['2FA_STATUS']
                         login_user(user, remember=False)
@@ -324,7 +324,7 @@ def mfa_login():
                     flash('Incorrect password or otp, try again.', category='error')
             else:
                 PASSWORD = request.form['PASSWORD']
-                if password_police.check_password_hash(user.password, PASSWORD):
+                if password_police.check_password_hash(user.master_password, PASSWORD):
                     login_user(user, remember=False)
                     user.active = True
                     user.last_confirmed_at = datetime.now()
@@ -400,7 +400,7 @@ def two_fa():
         USER_OTP = request.form['OTP']
         PASSWORD = request.form['PASSWORD']
         user = User.query.filter_by(email=current_user.email).first()
-        if two_factor_obj.verify(token, USER_OTP) and password_police.check_password_hash(user.password, PASSWORD):
+        if two_factor_obj.verify(token, USER_OTP) and password_police.check_password_hash(user.master_password, PASSWORD):
             user.two_FA = True
             user.two_FA_key = two_factor_obj.encrypt(PASSWORD.encode('utf-8'), token.encode('utf-8'))
             user.two_FA_type = "TOTP"
@@ -520,7 +520,7 @@ def pass_reset():
             check_password = request.form['C-PASSWORD']
             if password_police.check_password_hash(PASSWORD, check_password):
                 user = User.query.filter_by(email=session['EMAIL']).first()
-                user.password = PASSWORD
+                user.master_password = PASSWORD
                 if user.two_FA_type == "TOTP":
                     user.two_FA = 0
                     user.two_FA_key = None
