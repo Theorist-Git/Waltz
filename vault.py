@@ -41,13 +41,13 @@ def vault_display():
     if request.method == "POST":
         USERNAME = request.form['USERNAME']
         URL = request.form['URL']
-        PASSWORD = request.form['PASSWORD']
+        ENCRYPTED_PASSWORD = request.form['PASSWORD']
 
         new_entry = Passwords(
             user_id=current_user.id,
             user_name=USERNAME,
             url=URL,
-            password=PASSWORD
+            password=ENCRYPTED_PASSWORD
         )
 
         db.session.add(new_entry)

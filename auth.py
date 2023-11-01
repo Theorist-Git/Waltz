@@ -46,6 +46,10 @@ is authenticated.
 """
 
 
+def len_check(string: str):
+    return len(string) != 0
+
+
 @auth.after_request
 def apply_caching(response):
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
@@ -86,11 +90,11 @@ def create():
         session['NAME'] = request.form['USERNAME']
         session['EMAIL'] = request.form['EMAIL']
         exists = db.session.query(User.id).filter_by(email=session['EMAIL']).first() is None
-        if exists:
+        if exists and (len_check(session['NAME']) and len_check(session['EMAIL'])):
             session['referred_from_create'] = True
             return redirect(url_for('auth.otp'))
         else:
-            flash('Email already in use!', category='error')
+            flash('Email already in use or Invalid Email/Name', category='error')
 
     return render_template("create.html")
 

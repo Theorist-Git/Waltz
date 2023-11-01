@@ -14,7 +14,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Enter Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/vault" method="POST">
+                <form name="add_record" action="/vault" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <div class="modal-body">
                         <label for="USERNAME" class="form-label">Email</label>
@@ -22,17 +22,19 @@
                     </div>
                     <div class="modal-body">
                         <label for="URL" class="form-label">URL</label>
-				        <input autofocus="autofocus" type="url" class="form-control" name="URL" id="URL" placeholder="URL" />
+				        <input type="url" class="form-control" name="URL" id="URL" placeholder="URL" />
                     </div>
                     <div class="modal-body">
                         <label for="PASSWORD">Password</label>
-                        <input autofocus="autofocus" type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
+                        <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
                     </div>
-
                     <div class="modal-body d-grid gap-2">
-                        <button id="add-sub" type="submit" class="btn btn-success">Submit</button>
+                        <button id="add-sub" type="submit" style="display: none;" class="btn btn-success">Submit</button>
                     </div>
                 </form>
+                <div class="modal-body d-grid gap-2">
+                    <button onclick="encrypt()" id="add-ssub" class="btn btn-success">Submit</button>
+                </div>
             </div>
         </div>
     </div>
@@ -60,7 +62,7 @@
                             <input id="{{ i }}" class="form-control" type="password" value="{{ Password_blob[i].password }}" aria-label="Disabled input example" disabled readonly>
                         </td>
                         <td>
-                            <button onclick="copy_password_{{ i }}(); displayText_{{ i }}();" type="button" class="btn btn-dark">
+                            <button onclick="copy_password_{{ i }}();" type="button" class="btn btn-dark">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
                                   <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
                                   <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
@@ -78,10 +80,6 @@
                                     /* Copy the text inside the text field */
                                     navigator.clipboard.writeText(copyText.value);
                                 }
-                                function displayText_{{ i }}() {
-                                    let text = document.getElementById("{{ i }}");
-                                    text.style.display = "Copied";
-                                }
                             </script>
                         </td>
                     </tr>
@@ -97,5 +95,6 @@
     }
 </script>
 
+<script src="/static/js/encrypt_record.js"></script>
 
 {% endblock content %}

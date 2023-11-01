@@ -8,7 +8,7 @@
     {% else %}
     <h2>Enter Password</h2>
     {% endif %}
-    <form action="/mfa-login" method="POST">
+    <form action="/mfa-login" onsubmit="store_key()" method="POST">
         <div class="form-group mb-3">
             <label for="PASSWORD">Password</label>
             <input autofocus="autofocus" type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
@@ -29,7 +29,7 @@
         </div>
         {% endif %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button id="otp-sub" type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
         <div class="alert alert-primary my-3" role="alert">
             Greetings, Traveller!
         </div>
@@ -58,10 +58,9 @@
 <!-- Disables back button -->
 <script type="text/javascript">
     window.history.forward();
-    function noBack() {
-        window.history.forward();
-    }
 </script>
+
+<script src="/static/js/store_key.js"></script>
 
 <!-- Enabling Dark Mode -->
 <style>
