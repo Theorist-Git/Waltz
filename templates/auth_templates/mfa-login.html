@@ -8,7 +8,7 @@
     {% else %}
     <h2>Enter Password</h2>
     {% endif %}
-    <form action="/mfa-login" onsubmit="store_key()" method="POST">
+    <form action="/mfa-login" onsubmit="store_key('{{ email }}')" method="POST">
         <div class="form-group mb-3">
             <label for="PASSWORD">Password</label>
             <input autofocus="autofocus" type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />

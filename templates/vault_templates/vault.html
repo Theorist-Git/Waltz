@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<script src="/static/js/record_ciphers.js"></script>
+<script>let elem;</script>
 <div class="container my-3">
-    <div class="d-grid gap-2">
-        <button type="submit" id="submit" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add record</button><br />
+    <div class="container" style="text-align: center">
+        <button type="submit" id="submit" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add record</button>
     </div>
         <br />
         <!-- Modal -->
@@ -33,8 +35,7 @@
                     </div>
                 </form>
                 <div class="modal-body d-grid gap-2">
-                    <button onclick="encrypt()" id="add-ssub" class="btn btn-success">Submit</button>
-                    <button onclick="decrypt()" id="add-sdsub" class="btn btn-success">Submit</button>
+                    <button onclick="encrypt('{{ current_user.email }}')" id="encrypt-then-submit" class="btn btn-success">Submit</button>
                 </div>
             </div>
         </div>
@@ -61,6 +62,9 @@
                         </td>
                         <td>
                             <input id="{{ i }}" class="form-control" type="password" value="{{ Password_blob[i].password }}" aria-label="Disabled input example" disabled readonly>
+                            <script type="text/javascript">
+                                decrypt('{{ current_user.email }}', '{{ i }}');
+                            </script>
                         </td>
                         <td>
                             <button onclick="copy_password_{{ i }}();" type="button" class="btn btn-dark">
@@ -95,7 +99,5 @@
         window.history.replaceState(null, null, window.location.href);
     }
 </script>
-
-<script src="/static/js/encrypt_record.js"></script>
 
 {% endblock content %}

@@ -16,14 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.exceptions import abort
+from flask import Blueprint, render_template, request, flash
+from flask_login import login_required, current_user
 from __init__ import db
-from datetime import datetime
-from models import User, Passwords
-from PyCourier import PyCourier
-from AuthAlpha import PassHashing, TwoFactorAuth
+from models import Passwords
 from dotenv import load_dotenv
 from os import environ
 

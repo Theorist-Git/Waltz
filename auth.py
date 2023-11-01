@@ -340,7 +340,11 @@ def mfa_login():
                     flash('Incorrect password, try again.', category='error')
     else:
         abort(403)
-    return render_template("mfa-login.html", email=session['EMAIL'], two_fa=session['2FA_STATUS'])
+    return render_template(
+        "mfa-login.html",
+        email=session['EMAIL'],
+        two_fa=session['2FA_STATUS'],
+    )
 
 
 @auth.route('/logout')

@@ -16,6 +16,8 @@
         <link href="/static/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
         <!-- favicon -->
         <link rel="shortcut icon" type="image/ico" href="/static/favicon.ico" />
+        <!-- _crypt_utils -->
+        <script src="/static/js/_crypto_utils.js"></script>
     </head>
     <body style="background-color: #171e40;">
         <!-- header -->
@@ -61,7 +63,7 @@
                                         <li>
                                             <a class="dropdown-item" href="/vault">My Vault</a>
                                         </li>
-                                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                        <li><a class="dropdown-item" href="/logout" onclick="delete_key('{{ current_user.email }}')">Logout</a></li>
                                         <li><hr class="dropdown-divider" /></li>
                                         {% if current_user.role != "admin" and current_user.role != "author" %}
                                         <li>
@@ -109,6 +111,10 @@
             </div>
         </footer>
         <script src="/static/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="/static/js/_delete_key.js"></script>
+        {% if current_user.is_anonymous %}
+            <script>flush_db()</script>
+        {% endif %}
     </body>
     <style>
         .nav-item.dropdown {
