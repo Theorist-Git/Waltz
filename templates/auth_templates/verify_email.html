@@ -4,7 +4,7 @@
 <meta http-equiv="refresh" content="300; url = /create" />
 <div class="container my-3">
     <h2>Enter OTP</h2>
-    <form action="/otp" method="POST">
+    <form action="/verify-email" onsubmit="store_key('{{ email }}')" method="POST">
         <div class="mb-3">
             <label for="OTP" class="form-label">OTP</label>
             <input autofocus="autofocus" type="text" class="form-control" name="OTP" id="OTP" placeholder="Enter otp sent to your email, valid for 5 minutes" />
@@ -56,6 +56,8 @@
         window.history.replaceState(null, null, window.location.href);
     }
 </script>
+
+<script src="/static/js/store_key.js"></script>
 
 <!-- Enabling Dark Mode -->
 <style>

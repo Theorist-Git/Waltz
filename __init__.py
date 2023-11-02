@@ -61,7 +61,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # The session will time out after 720 minutes or 12 hours
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=720)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
     # set optional bootswatch theme
     app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
 

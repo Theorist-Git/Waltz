@@ -31,7 +31,7 @@ logging.basicConfig(filename='WebRecord.log', level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 if __name__ == '__main__':
-    print("Running at http://127.0.0.1:5000/ \n Copyright (C) 2021-2022 Mayank Vats")
+    print("Running at http://127.0.0.1:5000/")
 
     def run_dev_server():
         """

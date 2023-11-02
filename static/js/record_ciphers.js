@@ -19,8 +19,7 @@ async function decrypt(uid, counter) {
         let getData = store.get(uid);
         getData.onsuccess = async function() {
             let key = getData.result.key;
-            console.log( await decryptData(encryptedData, key))
-           window.document.getElementById(counter.toString()).value = await decryptData(encryptedData, key);
+            window.document.getElementById(counter.toString()).value = await decryptData(encryptedData, key);
         };
     })
 }
@@ -31,7 +30,7 @@ async function encryptData(secretData, aesKey) {
         const encryptedContent = await window.crypto.subtle.encrypt({
                 name: "AES-GCM",
                 iv: iv,
-            tagLength: 128
+                tagLength: 128
             },
             aesKey,
             enc.encode(secretData)
@@ -51,24 +50,23 @@ async function encryptData(secretData, aesKey) {
 }
 
 async function decryptData(encryptedData, aesKey) {
-  try {
-    const encryptedDataBuff = base64_to_buf(encryptedData);
-    const iv = encryptedDataBuff.slice(0, 12);
-    const data = encryptedDataBuff.slice(12);
+    try {
+        const encryptedDataBuff = base64_to_buf(encryptedData);
+        const iv = encryptedDataBuff.slice(0, 12);
+        const data = encryptedDataBuff.slice(12);
 
-    const decryptedContent = await window.crypto.subtle.decrypt(
-      {
-        name: "AES-GCM",
-        iv: iv,
-                      tagLength: 128
+        const decryptedContent = await window.crypto.subtle.decrypt({
+                name: "AES-GCM",
+                iv: iv,
+                tagLength: 128
 
-      },
-      aesKey,
-      data
-    );
-    return dec.decode(decryptedContent);
-  } catch (e) {
-    console.log(`Error - ${e}`);
-    return "";
-  }
+            },
+            aesKey,
+            data
+        );
+        return dec.decode(decryptedContent);
+    } catch (e) {
+        console.log(`Error - ${e}`);
+        return "";
+    }
 }

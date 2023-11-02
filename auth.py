@@ -46,8 +46,8 @@ is authenticated.
 """
 
 
-def len_check(string: str):
-    return len(string) != 0
+def len_check(string: str) -> bool:
+    return len(string) > 0
 
 
 @auth.after_request
@@ -79,30 +79,28 @@ def create():
         requests.
 
     2.  After that using an instance of SQLALCHEMY() (db), we check if the e-mail id
-        (Unique Key) entered by the user already exists. If the checks are passed,
+        (Secondary Key) entered by the user already exists. If the checks are passed,
         the user is redirected to auth.otp.
 
-    /* P.S Regex has already been implemented in the 'create.html' and 'otp.html' files. */
-
-    :return: renders template 'create.html', user=current_user
+    :return: renders template 'create.html'
     """
-    if request.method == 'POST':
-        session['NAME'] = request.form['USERNAME']
-        session['EMAIL'] = request.form['EMAIL']
-        exists = db.session.query(User.id).filter_by(email=session['EMAIL']).first() is None
-        if exists and (len_check(session['NAME']) and len_check(session['EMAIL'])):
-            session['referred_from_create'] = True
-            return redirect(url_for('auth.otp'))
+    if request.method == "POST":
+        session["NAME"] = request.form["USERNAME"]
+        session["EMAIL"] = request.form["EMAIL"]
+        already_exists = db.session.query(User.id).filter_by(email=session["EMAIL"]).first() is None
+        if already_exists and (len_check(session["NAME"]) and len_check(session["EMAIL"])):
+            session["referred_from_create"] = True
+            return redirect(url_for("auth.verify_email"))
         else:
-            flash('Email already in use or Invalid Email/Name', category='error')
+            flash("Email already in use or Invalid Email/Name", category="error")
 
     return render_template("create.html")
 
 
-@auth.route('/otp', methods=['GET', 'POST'])
-def otp():
+@auth.route('/verify-email', methods=['GET', 'POST'])
+def verify_email():
     """
-    Used to perform OTP checks specifically for account creation (i.e. for email verification).
+    Used for email verification before account creation
 
     1.  This page is only accessible if session key 'referred_from_create' is set to True.
         A threat actor cannot modify this data as the sessions are cryptographically signed
@@ -138,7 +136,7 @@ def otp():
     NOTE: Turning on 'Remember me' breaks the permanent session time-out functionality. The
     session expiring due to not entering OTP still works.
 
-    :return: renders template 'otp.html'
+    :return: renders template 'verify_email.html'
     """
     if 'referred_from_create' in session.keys() and session['referred_from_create']:
         if request.method == 'GET':
@@ -152,9 +150,8 @@ def otp():
             Waltz Email Verification Code:
             OTP: {COMP_OTP} (Valid for 5 minutes)
 
-            If you didn't attempt this registration, you can safely ignore this email, someone might have typed 
-            it in by mistake.
-                """,
+            If you didn't attempt this registration, you can safely ignore this email, someone might have typed it in 
+            by mistake. """,
                 msg_type="plain",
                 subject="Waltz Email Verification"
             )
@@ -182,11 +179,11 @@ def otp():
                 session.permanent = True
                 return redirect(url_for('auth.success'))
             else:
-                flash('Wrong otp', category='error')
+                flash('Incorrect OTP', category='error')
     else:
         abort(403)
 
-    return render_template("otp.html")
+    return render_template("verify_email.html", email=session["EMAIL"])
 
 
 @auth.route('/success')
@@ -278,11 +275,11 @@ def mfa_login():
                     sender_password=password,
                     recipients=[session['EMAIL']],
                     message=f"""\
-                    Waltz Email Two Factor Authentication:
-                    OTP: {COMP_OTP} (Valid for 5 minutes)
+                Waltz Email Two Factor Authentication:
+                OTP: {COMP_OTP} (Valid for 5 minutes)
 
-                    If you didn't attempt this login, someone has your account details, change them immediately:
-                    example.com
+                If you didn't attempt this login, someone has your account details, change them immediately:
+                example.com
                     """,
                     msg_type="plain",
                     subject="Waltz Email Two Factor Authentication"
@@ -299,7 +296,7 @@ def mfa_login():
                         password_police.check_password_hash(user.master_password, PASSWORD):
                     del session['COMP_OTP']
                     del session['2FA_STATUS']
-                    login_user(user, remember=False)
+                    login_user(user)
                     user.active = True
                     user.last_confirmed_at = datetime.now()
                     db.session.commit()

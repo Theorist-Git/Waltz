@@ -1,11 +1,12 @@
 const base64_to_buf = (b64) =>
-  Uint8Array.from(atob(b64), (c) => c.charCodeAt(null));
+    Uint8Array.from(atob(b64), (c) => c.charCodeAt(null));
 
 const buff_to_base64 = (buff) => btoa(
     new Uint8Array(buff).reduce(
         (data, byte) => data + String.fromCharCode(byte), ''
     )
 );
+
 function callOnStore(fn_) {
 
     // This works on all devices/browsers, and uses IndexedDBShim as a final fallback

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from __init__ import db
 from models import Passwords
@@ -49,6 +49,6 @@ def vault_display():
         db.session.add(new_entry)
         db.session.commit()
 
-        flash("Record created successfully", category="success")
+        return redirect(url_for("vault.vault_display"))
 
     return render_template("vault.html", Password_blob=Password_blob)
