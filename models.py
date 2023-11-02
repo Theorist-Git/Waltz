@@ -46,4 +46,4 @@ class Passwords(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user_name = db.Column(db.String(128), default=None)
     url = db.Column(db.String(128), default=None)
-    password = db.Column(db.String(512))
+    password = db.Column(db.String(150))

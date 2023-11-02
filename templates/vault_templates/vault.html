@@ -5,21 +5,21 @@
 
 <div class="container my-3">
     <div class="container" style="text-align: center">
-        <button type="submit" id="submit" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add record</button>
+        <button type="submit" id="submit" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#AddRecordModal">Add record</button>
     </div>
         <br />
-        <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Add Record Modal -->
+    <div class="modal fade" id="AddRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Enter Details</h5>
+                    <h5 class="modal-title" id="AddRecordModalLabel">Enter Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form name="add_record" action="/vault" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <div class="modal-body">
-                        <label for="USERNAME" class="form-label">Email</label>
+                        <label for="USERNAME" class="form-label">Username</label>
 				        <input autofocus="autofocus" class="form-control" name="USERNAME" id="USERNAME" placeholder="Username"/>
                     </div>
                     <div class="modal-body">
@@ -43,9 +43,10 @@
 </div>
 
 <div class="container">
-    <table style="background-color: #fff;" class="table">
+    <table id="vault" style="background-color: #fff;" class="table">
         <thead>
             <tr>
+                <th scope="col">Ops</th>
                 <th scope="col">#</th>
                 <th scope="col">Username</th>
                 <th scope="col">URL</th>
@@ -53,50 +54,128 @@
             </tr>
         </thead>
         <tbody>
-                {% for i in range (Password_blob| length) %}
-                    <tr>
-                        <th scope="row">{{ i + 1 }}</th>
-                        <td>{{ Password_blob[i].user_name }}</td>
-                        <td>
-                            <a href="{{ Password_blob[i].url }}" target="_blank" rel="noopener noreferrer">{{ Password_blob[i].url }}</a> <br />
-                        </td>
-                        <td>
-                            <input id="{{ i }}" class="form-control" type="password" value="{{ Password_blob[i].password }}" aria-label="Disabled input example" disabled readonly>
-                            <script type="text/javascript">
-                                decrypt('{{ current_user.email }}', '{{ i }}');
-                            </script>
-                        </td>
-                        <td>
-                            <button onclick="copy_password_{{ i }}();" type="button" class="btn btn-dark">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
-                                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                                </svg>
-                            </button>
-                            <script>
-                                function copy_password_{{ i }}() {
-                                    /* Get the text field */
-                                    let copyText = document.getElementById("{{ i }}");
+            {% for i in range (Password_blob| length) %}
+            <tr id="tr_{{ i }}">
+                <td>
+                    <button onclick="FillDeleteRecordModal('{{ i }}');" data-bs-toggle="modal" data-bs-target="#DeleteRecordModal" type="button" class="btn btn-sm btn-outline-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+                            />
+                        </svg>
+                    </button>
+                    <button onclick="" type="button" class="btn btn-outline-dark btn-sm my-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path
+                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+                            />
+                        </svg>
+                    </button>
+                </td>
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ Password_blob[i].user_name }}</td>
+                <td><a href="{{ Password_blob[i].url }}" target="_blank" rel="noopener noreferrer">{{ Password_blob[i].url }}</a> <br /></td>
+                <td>
+                    <input id="{{ i }}" class="form-control" type="password" value="{{ Password_blob[i].password }}" aria-label="Disabled input example" disabled readonly />
+                    <script type="text/javascript">
+                        decrypt("{{ current_user.email }}", "{{ i }}");
+                    </script>
+                </td>
+                <td>
+                    <button onclick="copy_password_{{ i }}();" type="button" class="btn btn-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                        </svg>
+                    </button>
+                    <script>
+                        function copy_password_{{ i }}() {
+                            /* Get the text field */
+                            let copyText = document.getElementById("{{ i }}");
 
-                                    /* Select the text field */
-                                    copyText.select();
-                                    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+                            /* Select the text field */
+                            copyText.select();
+                            copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
-                                    /* Copy the text inside the text field */
-                                    navigator.clipboard.writeText(copyText.value);
-                                }
-                            </script>
-                        </td>
-                    </tr>
-                {% endfor %}
+                            /* Copy the text inside the text field */
+                            navigator.clipboard.writeText(copyText.value);
+                        }
+                    </script>
+                </td>
+                <td style="display: none">{{ Password_blob[i].id }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
+
+    <!-- Delete Record Modal   -->
+    <div class="modal fade" id="DeleteRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DeleteRecordModalLabel">Are you sure you want to delete the following entry? </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/delete-form" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <input type="hidden" id="UniqueID" name="UniqueID" value="" />
+                    <div class="modal-body">
+                        <label for="DeleteModalUsername" class="form-label">-> Username</label>
+				        <input class="form-control" id="DeleteModalUsername" value="" aria-label="Disabled input example" readonly />
+                    </div>
+                    <div class="modal-body">
+                        <label for="DeleteModalURL" class="form-label">-> URL</label>
+				        <input class="form-control" id="DeleteModalURL" value="" aria-label="Disabled input example" readonly />
+                    </div>
+                    <div class="modal-body">
+                        <label for="DeleteModalPassword">-> Password</label>
+                        <input class="form-control" id="DeleteModalPassword" type="password" value="" aria-label="Disabled input example" disabled readonly />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger btn-large">Delete Entry</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+    <!-- JINJA to display flashed messages -->
+    <div class="my-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success" role="alert">
+                        {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 </div>
 
 <!-- Allows re-loading of page without the prompt to re-submit data(Search-Query) -->
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+
+<script>
+    function FillDeleteRecordModal(row_id) {
+        const tr_id = "#vault " + "tr[id=tr_" + row_id + "]";
+        const row = document.querySelector(tr_id);
+
+        document.getElementById("UniqueID").value = row.cells[6].innerHTML;
+        document.getElementById("DeleteModalUsername").value = row.cells[2].innerHTML;
+        document.getElementById("DeleteModalURL").value = row.cells[3].innerText;
+        document.getElementById("DeleteModalPassword").value = document.getElementById(row_id).value;
     }
 </script>
 

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from __init__ import db
 from models import Passwords
@@ -39,16 +39,37 @@ def vault_display():
         URL = request.form['URL']
         ENCRYPTED_PASSWORD = request.form['PASSWORD']
 
-        new_entry = Passwords(
-            user_id=current_user.id,
-            user_name=USERNAME,
-            url=URL,
-            password=ENCRYPTED_PASSWORD
-        )
+        if len(ENCRYPTED_PASSWORD) <= 512 \
+                and len(USERNAME) <= 128 \
+                and len(URL) <= 128:
 
-        db.session.add(new_entry)
-        db.session.commit()
+            new_entry = Passwords(
+                user_id=current_user.id,
+                user_name=USERNAME,
+                url=URL,
+                password=ENCRYPTED_PASSWORD
+            )
 
-        return redirect(url_for("vault.vault_display"))
+            db.session.add(new_entry)
+            db.session.commit()
+
+            return redirect(url_for("vault.vault_display"))
+        else:
+            flash("Username/URL/Password or Password is too long!\n Max Length:\nUsername: 128 chars\nURL: "
+                  "128 chars\nPassword: 512 chars", category="error")
 
     return render_template("vault.html", Password_blob=Password_blob)
+
+
+@vault.route('/delete-form', methods=["GET", "POST"])
+@login_required
+def delete_form():
+    if request.method == "POST":
+        UNIQUE_ID = request.form["UniqueID"]
+        Passwords.query.filter_by(id=UNIQUE_ID).delete()
+        db.session.commit()
+
+        flash("Entry deleted successfully")
+        return redirect(url_for("vault.vault_display"))
+
+    return render_template("vault.html", Password_blob=[])
