@@ -72,4 +72,4 @@ def delete_form():
         flash("Entry deleted successfully")
         return redirect(url_for("vault.vault_display"))
 
-    return render_template("vault.html", Password_blob=[])
+    return """<br><pre><code style="font-size:300%;"> Listening to POST requests....</code></pre>"""
