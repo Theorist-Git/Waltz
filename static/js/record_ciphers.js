@@ -1,14 +1,14 @@
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
-async function encrypt(id) {
-    const data = window.document.getElementById("PASSWORD").value;
+async function encrypt(password_id, aes_id, submit_id) {
+    const data = window.document.getElementById(password_id).value;
     callOnStore(function(store) {
-        let getData = store.get(id);
+        let getData = store.get(aes_id);
         getData.onsuccess = async function() {
             let key = getData.result.key;
-            window.document.add_record.PASSWORD.value = await encryptData(data, key);
-            document.getElementById("add-sub").click()
+            window.document.getElementById(password_id).value = await encryptData(data, key);
+            document.getElementById(submit_id).click()
         };
     })
 }

@@ -8,38 +8,6 @@
         <button type="submit" id="submit" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#AddRecordModal">Add record</button>
     </div>
         <br />
-    <!-- Add Record Modal -->
-    <div class="modal fade" id="AddRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddRecordModalLabel">Enter Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form name="add_record" action="/vault" method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                    <div class="modal-body">
-                        <label for="USERNAME" class="form-label">Username</label>
-				        <input autofocus="autofocus" class="form-control" name="USERNAME" id="USERNAME" placeholder="Username"/>
-                    </div>
-                    <div class="modal-body">
-                        <label for="URL" class="form-label">URL</label>
-				        <input class="form-control" name="URL" id="URL" placeholder="URL" />
-                    </div>
-                    <div class="modal-body">
-                        <label for="PASSWORD">Password</label>
-                        <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
-                    </div>
-                    <div class="modal-body d-grid gap-2">
-                        <button id="add-sub" type="submit" style="display: none;" class="btn btn-success">Submit</button>
-                    </div>
-                </form>
-                <div class="modal-body d-grid gap-2">
-                    <button onclick="encrypt('{{ current_user.email }}')" id="encrypt-then-submit" class="btn btn-success">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="container">
@@ -64,7 +32,7 @@
                             />
                         </svg>
                     </button>
-                    <button onclick="" type="button" class="btn btn-outline-dark btn-sm my-1">
+                    <button onclick="FillEditRecordModal('{{ i }}');" type="button" data-bs-toggle="modal" data-bs-target="#EditRecordModal" class="btn btn-outline-dark btn-sm my-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                             <path
                                 d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
@@ -108,6 +76,76 @@
         </tbody>
     </table>
 
+    <!-- Add Record Modal -->
+    <div class="modal fade" id="AddRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddRecordModalLabel">Enter Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form name="add_record" action="/vault" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <div class="modal-body">
+                        <label for="USERNAME" class="form-label">Username</label>
+				        <input autofocus="autofocus" class="form-control" name="USERNAME" id="USERNAME" placeholder="Username"/>
+                    </div>
+                    <div class="modal-body">
+                        <label for="URL" class="form-label">URL</label>
+				        <input class="form-control" name="URL" id="URL" placeholder="URL" />
+                    </div>
+                    <div class="modal-body">
+                        <label for="PASSWORD">Password</label>
+                        <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
+                    </div>
+                    <div class="modal-body d-grid gap-2">
+                        <button id="add-sub" type="submit" style="display: none;" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+                <div class="modal-body d-grid gap-2">
+                    <button onclick="encrypt('PASSWORD', '{{ current_user.email }}', 'add-sub')" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Record Modal   -->
+    <div class="modal fade" id="EditRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditRecordModalLabel">Edit Entry: </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/edit-form" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <input type="hidden" id="UniqueID-EDIT" name="UniqueID-EDIT" value="" />
+
+                    <div class="modal-body">
+                        <label for="EditModalUsername" class="form-label">Username</label>
+				        <input autofocus="autofocus" class="form-control" name="EditModalUsername" id="EditModalUsername" placeholder="Username"/>
+                    </div>
+                    <div class="modal-body">
+                        <label for="EditModalURL" class="form-label">URL</label>
+				        <input class="form-control" name="EditModalURL" id="EditModalURL" placeholder="URL" />
+                    </div>
+                    <div class="modal-body">
+                        <label for="EditModalPassword">Password</label>
+                        <input type="password" class="form-control" name="EditModalPassword" id="EditModalPassword" placeholder="Password" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="edit-sub" type="submit" style="display: none;"></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                <div class="modal-body d-grid gap-2">
+                    <button onclick="encrypt('EditModalPassword', '{{ current_user.email }}', 'edit-sub')" class="btn btn-success">Update Entry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Record Modal   -->
     <div class="modal fade" id="DeleteRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -118,7 +156,7 @@
                 </div>
                 <form action="/delete-form" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                    <input type="hidden" id="UniqueID" name="UniqueID" value="" />
+                    <input type="hidden" id="UniqueID-DEL" name="UniqueID-DEL" value="" />
                     <div class="modal-body">
                         <label for="DeleteModalUsername" class="form-label">-> Username</label>
 				        <input class="form-control" id="DeleteModalUsername" value="" aria-label="Disabled input example" readonly />
@@ -136,9 +174,9 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- JINJA to display flashed messages -->
     <div class="my-3">
@@ -172,10 +210,20 @@
         const tr_id = "#vault " + "tr[id=tr_" + row_id + "]";
         const row = document.querySelector(tr_id);
 
-        document.getElementById("UniqueID").value = row.cells[6].innerHTML;
+        document.getElementById("UniqueID-DEL").value = row.cells[6].innerHTML;
         document.getElementById("DeleteModalUsername").value = row.cells[2].innerHTML;
         document.getElementById("DeleteModalURL").value = row.cells[3].innerText;
         document.getElementById("DeleteModalPassword").value = document.getElementById(row_id).value;
+    }
+
+    function FillEditRecordModal(row_id) {
+        const tr_id = "#vault " + "tr[id=tr_" + row_id + "]";
+        const row = document.querySelector(tr_id);
+
+        document.getElementById("UniqueID-EDIT").value = row.cells[6].innerHTML;
+        document.getElementById("EditModalUsername").value = row.cells[2].innerHTML;
+        document.getElementById("EditModalURL").value = row.cells[3].innerText;
+        document.getElementById("EditModalPassword").value = document.getElementById(row_id).value;
     }
 </script>
 

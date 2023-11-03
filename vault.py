@@ -28,6 +28,9 @@ sender = environ['SENDER']
 password = environ['PASSWORD']
 
 vault = Blueprint("vault", __name__, template_folder="templates/vault_templates/")
+listening_post_str = "<br><pre><code style='font-size:300%;'> Listening to POST requests from /vault....</code></pre>"
+password_flash = ("Username/URL/Password or Password is too long!\n Max Length:\nUsername: 128 chars\nURL: 128 "
+                  "chars\nPassword: 512 chars")
 
 
 @vault.route('/vault', methods=["GET", "POST"])
@@ -55,8 +58,7 @@ def vault_display():
 
             return redirect(url_for("vault.vault_display"))
         else:
-            flash("Username/URL/Password or Password is too long!\n Max Length:\nUsername: 128 chars\nURL: "
-                  "128 chars\nPassword: 512 chars", category="error")
+            flash(password_flash, category="error")
 
     return render_template("vault.html", Password_blob=Password_blob)
 
@@ -65,11 +67,39 @@ def vault_display():
 @login_required
 def delete_form():
     if request.method == "POST":
-        UNIQUE_ID = request.form["UniqueID"]
+        UNIQUE_ID = request.form["UniqueID-DEL"]
         Passwords.query.filter_by(id=UNIQUE_ID).delete()
         db.session.commit()
 
-        flash("Entry deleted successfully")
+        flash("Entry deleted successfully", category="success")
         return redirect(url_for("vault.vault_display"))
 
-    return """<br><pre><code style="font-size:300%;"> Listening to POST requests....</code></pre>"""
+    return listening_post_str
+
+
+@vault.route('/edit-form', methods=["GET", "POST"])
+@login_required
+def edit_form():
+    if request.method == "POST":
+        UNIQUE_ID = request.form["UniqueID-EDIT"]
+        USERNAME = request.form["EditModalUsername"]
+        URL = request.form["EditModalURL"]
+        ENCRYPTED_PASSWORD = request.form["EditModalPassword"]
+
+        if len(ENCRYPTED_PASSWORD) <= 512 \
+                and len(USERNAME) <= 128 \
+                and len(URL) <= 128:
+            entry = Passwords.query.filter_by(id=UNIQUE_ID).first()
+            entry.user_name = USERNAME
+            entry.url = URL
+            entry.password = ENCRYPTED_PASSWORD
+
+            db.session.commit()
+
+            flash("Entry updated successfully", category="success")
+            return redirect(url_for("vault.vault_display"))
+
+        else:
+            flash(password_flash, category="error")
+
+    return listening_post_str
