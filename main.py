@@ -21,12 +21,8 @@ import logging
 
 app = create_app()
 
-"""
-    Logger logs INFO, WARNINGS, ERROR and CRITICAL logs to 'filename'
-    Set the log level to anyone of the following
-"""
-
-logging.basicConfig(filename='WebRecord.log', level=logging.INFO,
+# Logging levels: INFO, WARNINGS, ERROR and CRITICAL
+logging.basicConfig(filename='WebRecord.log', level=logging.WARNING,
                     format='%(asctime)s - %(threadName)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -35,10 +31,10 @@ if __name__ == '__main__':
 
     def run_dev_server():
         """
-        Use only for development purposes, call run_prod_server() when in
-        production. The server runs with re-loader by default.
+        FOR DEVELOPMENT PURPOSES ONLY.
+        The server runs with re-loader and debug enabled by default.
         """
         print('\033[1m', 'DEVELOPMENT SERVER', '\033[0m')
-        app.run(debug=True, use_reloader=True, port=5000, host='0.0.0.0')
+        app.run(debug=True, use_reloader=True, port=5000)
 
     run_dev_server()

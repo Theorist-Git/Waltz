@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Flask, render_template, url_for, flash
+from flask import Flask, render_template, url_for, abort
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, current_user
@@ -28,55 +28,73 @@ from urllib.parse import quote
 from dotenv import load_dotenv
 from os import environ
 
-# We define an SQLAlchemy object
 db = SQLAlchemy()
 user = current_user
 
 
 def create_app():
     """
-    This function creates app the ready to run, it takes care of all the configuration settings
-    of the app. It handles all the database relational models, login managers, view blueprint
-    registration, error handling and admin panel & related views.
+    Configures the Flask application
     :return: app (An instance of Flask)
     """
     app = Flask(__name__)
+    # Admin panel instantiated
     admin = Admin(app, name="Theorist", template_mode="bootstrap4")
 
+    # CSRF Protection enabled globally.
     CSRFProtect(app)
+    # Imports DB connection details from .env file.
     load_dotenv()
 
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://theorist:%s@localhost/theorist_dev' % \
-                              quote(environ['THEORIST_LOCALHOST_PASS'])
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://%s:%s@%s/%s' % \
+                              (
+                                  quote(environ["USER"]),
+                                  quote(environ["THEORIST_LOCALHOST_PASS"]),
+                                  quote(environ["HOST"]),
+                                  quote(environ["DB"])
+                              )
 
-    # 256 bit security key
-    app.config['WTF_CSRF_SECRET_KEY'] = environ['WTF_CSRF_SECRET_KEY']
-    app.config['SECRET_KEY'] = environ['SECRET_KEY']
-    app.config['SESSION_COOKIE_SECURE'] = True
-    app.config['SESSION_COOKIE_HTTPONLY'] = True
-    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-    app.config['REMEMBER_COOKIE_SECURE'] = True
-    app.config['REMEMBER_COOKIE_HTTPONLY'] = True
-    app.config['REMEMBER_COOKIE_SAMESITE'] = "Lax"
-    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # The session will time out after 720 minutes or 12 hours
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
-    # set optional bootswatch theme
-    app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
+    # WTF_CSRF_SECRET_KEY is used to generate a key that signs form POST requests.
+    app.config["WTF_CSRF_SECRET_KEY"] = environ["WTF_CSRF_SECRET_KEY"]
 
-    # This callback can be used to initialize an application for the
-    # use with this database setup.  Never use a database in the context
-    # of an application not initialized that way or connections will
-    # leak.
+    # A secret key that will be used for securely signing the session cookie.
+    app.config["SECRET_KEY"] = environ["SECRET_KEY"]
+
+    # Session cookie name.
+    app.config["SESSION_COOKIE_NAME"] = "WALTZ_SESSION"
+
+    # Browsers will only send cookies with requests over HTTPS if the cookie is marked “secure”.
+    app.config["SESSION_COOKIE_SECURE"] = True
+
+    # Lax prevents sending cookies with CSRF-prone requests from external sites, such as submitting a form.
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+    # Browsers will not allow JavaScript access to cookies marked as “HTTP only” for security.
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+
+    # Remember cookie
+    app.config["REMEMBER_COOKIE_SECURE"] = True
+    app.config["REMEMBER_COOKIE_SAMESITE"] = "Lax"
+    app.config["REMEMBER_COOKIE_HTTPONLY"] = True
+
+    # Providing SQlALCHEMY with the database URI.
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+
+    # SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead.
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    # User is automatically logged out after 5 minutes.
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
+
+    # Set optional bootswatch theme for the admin panel.
+    app.config["FLASK_ADMIN_SWATCH"] = "darkly"
 
     db.init_app(app)
 
-    # importing view blueprints from their respective files, to be registered with the flask app.
+    # Importing blueprints
     from auth import auth
     from vault import vault
 
-    # To be fixed after views are fixed!!!
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(vault, url_prefix='/')
 
@@ -84,30 +102,30 @@ def create_app():
     # 404(page_not_found), 403(forbidden), 500(internal server error) are set explicitly
     @app.errorhandler(404)
     def page_not_found(_):
-        return render_template('404.html'), 404
+        return render_template("404.html"), 404
 
     @app.errorhandler(403)
     def forbidden(_):
-        return render_template('403.html'), 403
+        return render_template("403.html"), 403
 
     @app.errorhandler(500)
     def internal_server_error(_):
-        return render_template('500.html'), 500
+        return render_template("500.html"), 500
 
-    # Importing database model (see models.py).
+    # Importing database models (see models.py).
     from models import User, Passwords
 
-    # Will create tables if they're not there
+    # Will create tables if they do not exist
     with app.app_context():
         db.create_all()
 
-    # Adding admin views
+    # Restricting access to admin panel
     class MyAdminViews(ModelView):
         def is_accessible(self):
             """
-            is_accessible method is overridden method in BaseView and make it so that only users that
-            are authenticated and have an "admin" role can access admin views.
-            :return: Boolean (True -> is_accessible) & (False -> is_not_accessible)
+            Overrides in-built 'is_accessible' method.
+            Only users with 'admin' role can access this page.
+            :return: is_accessible (BOOLEAN)
             """
             if current_user.is_authenticated:
                 admin_user = User.query.get(current_user.id)
@@ -116,16 +134,15 @@ def create_app():
 
         def inaccessible_callback(self, name, **kwargs):
             """
-            redirect to login page if user doesn't have access
+            If 'is_accessible' returns False, 'inaccessible_callback' raises 403.
             """
-            flash("Forbidden 403", category="error")
-            return redirect(url_for('auth.login'))
+            return render_template("403.html"), 403
 
-    # Adding views to Admin Panel (An instance of Admin class in flask_admin)
+    # Adding DB tables to admin panel for easy viewing.
     admin.add_view((MyAdminViews(User, db.session)))
     admin.add_view((MyAdminViews(Passwords, db.session)))
 
-    # To use flask-login to manage authentication ,we create an instance of LoginManager Class in flask-login.
+    # To use flask-login to manage authentication, we create an instance of LoginManager Class in flask-login.
     # We also have to specify which view will handle authentication, in my case the view is auth.login.
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

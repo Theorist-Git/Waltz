@@ -20,12 +20,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from __init__ import db
 from models import Passwords
-from dotenv import load_dotenv
-from os import environ
 
-load_dotenv()
-sender = environ['SENDER']
-password = environ['PASSWORD']
 
 vault = Blueprint("vault", __name__, template_folder="templates/vault_templates/")
 listening_post_str = "<br><pre><code style='font-size:300%;'> Listening to POST requests from /vault....</code></pre>"
@@ -36,6 +31,19 @@ password_flash = ("Username/URL/Password or Password is too long!\n Max Length:\
 @vault.route('/vault', methods=["GET", "POST"])
 @login_required
 def vault_display():
+    """
+    Retrieves the encrypted blob of passwords for the user from the DB.
+    Allows for CRUD operations on the users vault using helper views
+        - delete_form()
+        - edit_form()
+
+    Plain text password is never seen by the server as the passwords are
+    encrypted on the client side before being POSTED to the server.
+
+    View makes sure no illegal value is transmitted to the DB as well.
+
+    :return: renders template 'vault.html'
+    """
     Password_blob = Passwords.query.filter_by(user_id=current_user.id).all()
     if request.method == "POST":
         USERNAME = request.form['USERNAME']
@@ -66,6 +74,11 @@ def vault_display():
 @vault.route('/delete-form', methods=["GET", "POST"])
 @login_required
 def delete_form():
+    """
+    Deletes a record using the primary key of an entry into the vault.
+
+    :return: listening_post_str: str
+    """
     if request.method == "POST":
         UNIQUE_ID = request.form["UniqueID-DEL"]
         Passwords.query.filter_by(id=UNIQUE_ID).delete()
@@ -80,6 +93,11 @@ def delete_form():
 @vault.route('/edit-form', methods=["GET", "POST"])
 @login_required
 def edit_form():
+    """
+    Deletes a record using the primary key of an entry into the vault.
+
+    :return: listening_post_str: str
+    """
     if request.method == "POST":
         UNIQUE_ID = request.form["UniqueID-EDIT"]
         USERNAME = request.form["EditModalUsername"]

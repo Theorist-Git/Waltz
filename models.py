@@ -22,9 +22,8 @@ from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
     """
-    User class inherits UserMixin class from flask_login
-    and model is defined using db which is an instance of
-    SQLAlchemy() [See __init__UP.py]. Used to store User data.
+    User class inherits UserMixin class from flask_login.
+    db is an instance of SQLAlchemy(). [See __init__.py]
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))

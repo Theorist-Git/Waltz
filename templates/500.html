@@ -1,1 +1,16 @@
-<h1>INTERNAL SERVER ERROR 500</h1>
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="text-align: center" class="container">
+    <h1>500: Internal Server Error <br> Notify admin at: <a href="mailto:someone@example.com"><img class="mx-3" src="/static/svg/mailto.svg" width="40px" alt="email" /></a>
+</h1>
+</div>
+
+<!-- Enabling Dark Mode -->
+<style>
+	.container {
+		color: #fff !important;
+	}
+</style>
+
+{% endblock content %}
