@@ -104,7 +104,7 @@ def edit_form():
         URL = request.form["EditModalURL"]
         ENCRYPTED_PASSWORD = request.form["EditModalPassword"]
 
-        if len(ENCRYPTED_PASSWORD) <= 512 \
+        if len(ENCRYPTED_PASSWORD) <= 208 \
                 and len(USERNAME) <= 128 \
                 and len(URL) <= 128:
             entry = Passwords.query.filter_by(id=UNIQUE_ID).first()

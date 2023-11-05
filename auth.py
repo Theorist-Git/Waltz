@@ -150,8 +150,7 @@ def verify_email():
             Waltz Email Verification Code:
             OTP: {COMP_OTP} (Valid for 5 minutes)
 
-            If you didn't attempt this registration, you can safely ignore this email, someone might have typed it in 
-            by mistake. """,
+            If you didn't attempt this registration, you can safely ignore this email.""",
                 msg_type="plain",
                 subject="Waltz Email Verification"
             )
@@ -398,14 +397,14 @@ def two_fa():
 
     :return: renders template 'two-FA.html'
     """
-    if request.method == 'GET':
-        secret = two_factor_obj.totp(name=current_user.email, issuer_name="Waltz.com")
+    secret = two_factor_obj.totp(name=current_user.email, issuer_name="Waltz.com")
     if request.method == 'POST':
         token = request.form['SECRET']
         USER_OTP = request.form['OTP']
         PASSWORD = request.form['PASSWORD']
         user = User.query.filter_by(email=current_user.email).first()
-        if two_factor_obj.verify(token, USER_OTP) and password_police.check_password_hash(user.master_password, PASSWORD):
+        if two_factor_obj.verify(token, USER_OTP) and \
+                password_police.check_password_hash(user.master_password, PASSWORD):
             user.two_FA = True
             user.two_FA_key = two_factor_obj.encrypt(PASSWORD.encode('utf-8'), token.encode('utf-8'))
             user.two_FA_type = "TOTP"
@@ -488,8 +487,7 @@ def otp_check():
                 Waltz Password Reset
                 OTP: {COMP_OTP} (Valid for 5 minutes)
 
-                If you didn't attempt this password-reset, you can safely ignore this email, someone might have typed\ 
-                it in by mistake
+                If you didn't attempt this password-reset, you can safely ignore this email.
                 """,
                 msg_type="plain",
                 subject="Waltz Password Reset"

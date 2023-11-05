@@ -1,322 +1,61 @@
-# _An open source, cloud-based password manager._
-
-![alt text](./static/images/waltz.png)
-
-[//]: # (Dillinger is a cloud-enabled, mobile-ready, offline-storage compatible,)
-
-[//]: # (AngularJS-powered HTML5 Markdown editor.)
-
-[//]: # ()
-[//]: # (- Type some Markdown on the left)
-
-[//]: # (- See HTML in the right)
-
-[//]: # (- ✨Magic ✨)
-
-[//]: # ()
-[//]: # (## Features)
-
-[//]: # ()
-[//]: # (- Import a HTML file and watch it magically convert to Markdown)
-
-[//]: # (- Drag and drop images &#40;requires your Dropbox account be linked&#41;)
-
-[//]: # (- Import and save files from GitHub, Dropbox, Google Drive and One Drive)
-
-[//]: # (- Drag and drop markdown and HTML files into Dillinger)
-
-[//]: # (- Export documents as Markdown, HTML and PDF)
-
-[//]: # ()
-[//]: # (Markdown is a lightweight markup language based on the formatting conventions)
-
-[//]: # (that people naturally use in email.)
-
-[//]: # (As [John Gruber] writes on the [Markdown site][df1])
-
-[//]: # ()
-[//]: # (> The overriding design goal for Markdown's)
-
-[//]: # (> formatting syntax is to make it as readable)
-
-[//]: # (> as possible. The idea is that a)
-
-[//]: # (> Markdown-formatted document should be)
-
-[//]: # (> publishable as-is, as plain text, without)
-
-[//]: # (> looking like it's been marked up with tags)
-
-[//]: # (> or formatting instructions.)
-
-[//]: # ()
-[//]: # (This text you see here is *actually- written in Markdown! To get a feel)
-
-[//]: # (for Markdown's syntax, type some text into the left window and)
-
-[//]: # (watch the results in the right.)
-
-[//]: # ()
-[//]: # (## Tech)
-
-[//]: # ()
-[//]: # (Dillinger uses a number of open source projects to work properly:)
-
-[//]: # ()
-[//]: # (- [AngularJS] - HTML enhanced for web apps!)
-
-[//]: # (- [Ace Editor] - awesome web-based text editor)
-
-[//]: # (- [markdown-it] - Markdown parser done right. Fast and easy to extend.)
-
-[//]: # (- [Twitter Bootstrap] - great UI boilerplate for modern web apps)
-
-[//]: # (- [node.js] - evented I/O for the backend)
-
-[//]: # (- [Express] - fast node.js network app framework [@tjholowaychuk])
-
-[//]: # (- [Gulp] - the streaming build system)
-
-[//]: # (- [Breakdance]&#40;https://breakdance.github.io/breakdance/&#41; - HTML)
-
-[//]: # (to Markdown converter)
-
-[//]: # (- [jQuery] - duh)
-
-[//]: # ()
-[//]: # (And of course Dillinger itself is open source with a [public repository][dill])
-
-[//]: # ( on GitHub.)
-
-[//]: # ()
-[//]: # (## Installation)
-
-[//]: # ()
-[//]: # (Dillinger requires [Node.js]&#40;https://nodejs.org/&#41; v10+ to run.)
-
-[//]: # ()
-[//]: # (Install the dependencies and devDependencies and start the server.)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (cd dillinger)
-
-[//]: # (npm i)
-
-[//]: # (node app)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (For production environments...)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (npm install --production)
-
-[//]: # (NODE_ENV=production node app)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (## Plugins)
-
-[//]: # ()
-[//]: # (Dillinger is currently extended with the following plugins.)
-
-[//]: # (Instructions on how to use them in your own application are linked below.)
-
-[//]: # ()
-[//]: # (| Plugin | README |)
-
-[//]: # (| ------ | ------ |)
-
-[//]: # (| Dropbox | [plugins/dropbox/README.md][PlDb] |)
-
-[//]: # (| GitHub | [plugins/github/README.md][PlGh] |)
-
-[//]: # (| Google Drive | [plugins/googledrive/README.md][PlGd] |)
-
-[//]: # (| OneDrive | [plugins/onedrive/README.md][PlOd] |)
-
-[//]: # (| Medium | [plugins/medium/README.md][PlMe] |)
-
-[//]: # (| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |)
-
-[//]: # ()
-[//]: # (## Development)
-
-[//]: # ()
-[//]: # (Want to contribute? Great!)
-
-[//]: # ()
-[//]: # (Dillinger uses Gulp + Webpack for fast developing.)
-
-[//]: # (Make a change in your file and instantaneously see your updates!)
-
-[//]: # ()
-[//]: # (Open your favorite Terminal and run these commands.)
-
-[//]: # ()
-[//]: # (First Tab:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (node app)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (Second Tab:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (gulp watch)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (&#40;optional&#41; Third:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (karma test)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (#### Building for source)
-
-[//]: # ()
-[//]: # (For production release:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (gulp build --prod)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (Generating pre-built zip archives for distribution:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (gulp build dist --prod)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (## Docker)
-
-[//]: # ()
-[//]: # (Dillinger is very easy to install and deploy in a Docker container.)
-
-[//]: # ()
-[//]: # (By default, the Docker will expose port 8080, so change this within the)
-
-[//]: # (Dockerfile if necessary. When ready, simply use the Dockerfile to)
-
-[//]: # (build the image.)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (cd dillinger)
-
-[//]: # (docker build -t <youruser>/dillinger:${package.json.version} .)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (This will create the dillinger image and pull in the necessary dependencies.)
-
-[//]: # (Be sure to swap out `${package.json.version}` with the actual)
-
-[//]: # (version of Dillinger.)
-
-[//]: # ()
-[//]: # (Once done, run the Docker image and map the port to whatever you wish on)
-
-[//]: # (your host. In this example, we simply map port 8000 of the host to)
-
-[//]: # (port 8080 of the Docker &#40;or whatever port was exposed in the Dockerfile&#41;:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (docker run -d -p 8000:8080 --restart=always --cap-add=SYS_ADMIN --name=dillinger <youruser>/dillinger:${package.json.version})
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (> Note: `--capt-add=SYS-ADMIN` is required for PDF rendering.)
-
-[//]: # ()
-[//]: # (Verify the deployment by navigating to your server address in)
-
-[//]: # (your preferred browser.)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (127.0.0.1:8000)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (## License)
-
-[//]: # ()
-[//]: # (MIT)
-
-[//]: # ()
-[//]: # (**Free Software, Hell Yeah!**)
-
-[//]: # ()
-[//]: # ([//]: # &#40;These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax&#41;)
-[//]: # ()
-[//]: # (   [dill]: <https://github.com/joemccann/dillinger>)
-
-[//]: # (   [git-repo-url]: <https://github.com/joemccann/dillinger.git>)
-
-[//]: # (   [john gruber]: <http://daringfireball.net>)
-
-[//]: # (   [df1]: <http://daringfireball.net/projects/markdown/>)
-
-[//]: # (   [markdown-it]: <https://github.com/markdown-it/markdown-it>)
-
-[//]: # (   [Ace Editor]: <http://ace.ajax.org>)
-
-[//]: # (   [node.js]: <http://nodejs.org>)
-
-[//]: # (   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>)
-
-[//]: # (   [jQuery]: <http://jquery.com>)
-
-[//]: # (   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>)
-
-[//]: # (   [express]: <http://expressjs.com>)
-
-[//]: # (   [AngularJS]: <http://angularjs.org>)
-
-[//]: # (   [Gulp]: <http://gulpjs.com>)
-
-[//]: # ()
-[//]: # (   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>)
-
-[//]: # (   [PlGh]: <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>)
-
-[//]: # (   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>)
-
-[//]: # (   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>)
-
-[//]: # (   [PlMe]: <https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md>)
-
-[//]: # (   [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>)
+# Waltz: _An open source, cloud-based password manager._
+
+## Installation
+
+1. **Clone the Repository**:
+
+   ```bash
+   $ https://github.com/Theorist-Git/Waltz.git
+   $ python3 -m venv /home/theorist/Envs/waltz
+   $ source /home/theorist/Envs/waltz/bin/activate
+   $ pip install requirements.txt
+   ```
+2. Install the required python packages
+    ```bash
+   $ python3 -m venv /home/theorist/Envs/waltz    // Create a virtual env
+   $ source /home/theorist/Envs/waltz/bin/activate // [Recommended]
+   $ pip install requirements.txt
+   ```
+   
+3. Make sure that you have a MySQL server installed and configured.
+
+4. Create a `.env` file. It must have the following fields:
+   ```text
+    WTF_CSRF_SECRET_KEY=1234        ; Key used to generate CSRF tokens
+    SECRET_KEY=1234                 ; Key used for securely signing the session cookie
+    HOST=localhost                  
+    USER=root
+    DB=test
+    THEORIST_LOCALHOST_PASS=abcd
+    SENDER=email                    ; Email ID used by PyCourier to send emails.
+    PASSWORD=password               ; App password for the Email ID. Google deprecated actual passwords some time ago.
+    ```
+   [What is the flask secret key and how do I generate it?](https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY)
+5. Running the webserver: (Currently only development server is configured.)
+
+    ```bash
+   $ cd waltz
+   $ python main.py
+    ```    
+   
+## Features:
+
+1. Creating an account that can be secured by either email or TOTP type two-factor authentication.
+2. Zero knowledge architecture: The server never ever sees your passwords in plain text.
+   1. Using [WebCrypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) and [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API),
+   your passwords are encrypted and decrypted on the client side.
+   2. The back end doesn't have any knowledge of your master password or the encryption key derived from it. So, 
+   in the event of a data breach, your passwords are safe.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first.
+
+## Author(s)
+
+Contributor names and contact info
+* Mayank vats : [Theorist-git](https://github.com/Theorist-Git)
+  * Email: dev-theorist.e5xna@simplelogin.com
+
+## License
+
+This project is licensed under the [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/#) License

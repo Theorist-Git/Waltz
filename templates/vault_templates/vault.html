@@ -97,6 +97,9 @@
                     <div class="modal-body">
                         <label for="PASSWORD">Password</label>
                         <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="Password" />
+                        <div class="input-group-append">
+                            <button onclick="resetGenPass();" data-bs-toggle="modal" data-bs-target="#GenPassModal" class="btn btn-secondary my-1" type="button">Generate Password</button>
+                        </div>
                     </div>
                     <div class="modal-body d-grid gap-2">
                         <button id="add-sub" type="submit" style="display: none;" class="btn btn-success">Submit</button>
@@ -117,7 +120,7 @@
                     <h5 class="modal-title" id="EditRecordModalLabel">Edit Entry: </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/edit-form" method="POST">
+                <form onsubmit="" action="/edit-form" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <input type="hidden" id="UniqueID-EDIT" name="UniqueID-EDIT" value="" />
 
@@ -136,7 +139,6 @@
 
                     <div class="modal-footer">
                         <button id="edit-sub" type="submit" style="display: none;"></button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
                 <div class="modal-body d-grid gap-2">
@@ -174,6 +176,25 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Password Modal      -->
+    <div class="modal fade" id="GenPassModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="GenPassModalLabel">Enter Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <label for="Enter-Password-Length">Enter Password Length (1-128)</label>
+                        <input class="form-control" type="number" id="Enter-Password-Length" />
+                </div>
+                <div class="modal-footer">
+                    <button onclick="genPass();" id="cp-pass" type="submit" class="btn btn-success">Copy Password</button>
+                </div>
             </div>
         </div>
     </div>
@@ -224,6 +245,36 @@
         document.getElementById("EditModalUsername").value = row.cells[2].innerHTML;
         document.getElementById("EditModalURL").value = row.cells[3].innerText;
         document.getElementById("EditModalPassword").value = document.getElementById(row_id).value;
+    }
+
+    function resetGenPass() {
+        document.getElementById("cp-pass").innerHTML = "Copy Password"
+    }
+
+    function genPass() {
+
+        const pass_len = parseInt(document.getElementById("Enter-Password-Length").value, 10);
+
+        if (isNaN(pass_len)) {
+            window.alert("Enter a number!");
+            return;
+        }
+
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+        let password = "";
+
+        if (pass_len < 1 || pass_len > 128) {
+            window.alert("Password length should be at least 1 character and atmost 128 characters");
+            return;
+        }
+
+        for (let i = 0; i < pass_len; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset.charAt(randomIndex);
+        }
+
+        navigator.clipboard.writeText(password);
+        document.getElementById("cp-pass").innerHTML = "copied!"
     }
 </script>
 
