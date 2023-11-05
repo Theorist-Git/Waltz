@@ -514,6 +514,8 @@ def pass_reset():
     [III] pass_reset:
     Here the user POSTS a new password.
     Resetting password disables TOTP type 2FA.
+    It also purges the vault of any user passwords as
+    they're now irretrievable.
 
     :return: renders template 'pass-reset.html'
     """
@@ -523,6 +525,7 @@ def pass_reset():
             check_password = request.form['C-PASSWORD']
             if password_police.check_password_hash(PASSWORD, check_password):
                 user = User.query.filter_by(email=session['EMAIL']).first()
+                Passwords.query.filter_by(user_id=user.id).delete()
                 user.master_password = PASSWORD
                 if user.two_FA_type == "TOTP":
                     user.two_FA = 0
@@ -531,7 +534,7 @@ def pass_reset():
                 db.session.commit()
                 del session['referred_from_forgot_pass']
                 flash('Password changed successfully!', category='success')
-                return redirect(url_for('auth.secrets'))
+                return redirect(url_for('auth.login'))
             else:
                 flash("The passwords don't match", category='error')
     else:

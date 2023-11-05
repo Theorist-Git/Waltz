@@ -2,7 +2,17 @@
 {% block content %}
 
 <div class="container my-3">
-    <h2>Recovery</h2>
+    <div class="p-2 bg-dark rounded-3 my-2" style="position: relative;">
+        <h2><u>I Forgot my Master Password</u></h2>
+        <p class="fs-4">
+
+            Waltz operates with zero-knowledge encryption.
+            This means that Waltz has zero knowledge of, way to retrieve, or way to reset your master password.
+            <br>
+            If you have no means to get access to you master password, you will need to reset your password. You will
+            lose access to all the items stored in your vault.
+        </p>
+    </div>
     <form action="/forgot-pass" method="POST">
         <div class="form-group mb-3">
             <label for="EMAIL" class="form-label">Email</label>
@@ -14,13 +24,6 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     </form>
     <br />
-    <div class="alert alert-danger" role="alert">
-        Unfortunately, if you don't have access to your email-id, we can't do anything for you :c
-    </div>
-    <br />
-    <div class="alert alert-danger" role="alert">
-        Resetting your password will disable Two-Factor Authentication(TOTP-type), you will have re-configure it.
-    </div>
 
     <!-- JINJA to display flashed messages -->
 	<div class="my-3">
