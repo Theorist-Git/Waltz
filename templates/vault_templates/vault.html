@@ -135,6 +135,9 @@
                     <div class="modal-body">
                         <label for="EditModalPassword">Password</label>
                         <input type="password" class="form-control" name="EditModalPassword" id="EditModalPassword" placeholder="Password" />
+                        <div class="input-group-append">
+                            <button onclick="resetGenPass();" data-bs-toggle="modal" data-bs-target="#GenPassModal" class="btn btn-secondary my-1" type="button">Generate Password</button>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -264,7 +267,7 @@
         let password = "";
 
         if (pass_len < 1 || pass_len > 128) {
-            window.alert("Password length should be at least 1 character and atmost 128 characters");
+            window.alert("Password length should be at least 1 character and at-most 128 characters");
             return;
         }
 
