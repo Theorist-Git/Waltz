@@ -6,9 +6,6 @@
 
    ```bash
    $ https://github.com/Theorist-Git/Waltz.git
-   $ python3 -m venv /home/theorist/Envs/waltz
-   $ source /home/theorist/Envs/waltz/bin/activate
-   $ pip install requirements.txt
    ```
 2. Install the required python packages
     ```bash

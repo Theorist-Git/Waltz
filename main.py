@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __init__ import create_app
 import logging
+from subprocess import call
 
 app = create_app()
 
@@ -36,5 +37,9 @@ if __name__ == '__main__':
         """
         print('\033[1m', 'DEVELOPMENT SERVER', '\033[0m')
         app.run(debug=True, use_reloader=True, port=5000)
+
+    def run_unix_server():
+        print('\033[1m', 'PRODUCTION SERVER (GUNICORN)', '\033[0m')
+        call(["gunicorn", "--bind", "0.0.0.0:5000", "__init__:create_app()", "-w", "4"])
 
     run_dev_server()
